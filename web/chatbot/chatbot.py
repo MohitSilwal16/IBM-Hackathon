@@ -28,11 +28,16 @@ def get_category(user_complain: str) -> str:
     return category_chain.invoke({"user_complain": user_complain}).strip()
 
 
-def get_similar_solution(user_complain: str) -> ticket.Ticket:
+def get_similar_solution(user_complain: str) -> str:
+    c2 = user_complain
     resolved_tickets = ticket.get_resolved_tickets()
     for t in resolved_tickets:
-        if t.main_description == user_complain:
-            return t
+        c1 = t.main_description + "\n" + t.other_description
+        are_complains_similar = similarity_check_chain.invoke(
+            {"complaint_1": c1, "complaint_2": c2}
+        )
+        if are_complains_similar == "true":
+            return t.remark
     return None
 
 

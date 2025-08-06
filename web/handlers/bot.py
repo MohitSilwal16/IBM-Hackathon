@@ -39,16 +39,6 @@ def message():
     ticks = ticks[:3]
 
     user_complain = request.form.get("com")
-    # TODO: TEMP START
-    # if user_complain == "Hello":
-    #     return render_template(
-    #         "home.html",
-    #         user_complain=user_complain,
-    #         bot_response="How're you ?",
-    #         tickets=ticks,
-    #     )
-    # TODO: TEMP END
-
     bot_res = request.form.get("bot_response")
     print(f"Bot Response: {bot_res}")
     if not bot_res:
