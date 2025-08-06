@@ -9,7 +9,7 @@ def home():
     is_session_token_valid = users.is_session_token_valid(session_token)
     if not is_session_token_valid:
         return redirect(url_for("auth.login"))
-    return render_template("home.html")
+    return render_template("home.html", user_complain="", bot_response="")
 
 @bot_bp.route("/message", methods = ['POST'])
 def message():

@@ -21,7 +21,8 @@ def register():
     password = request.form.get("password")
     email = request.form.get("email")
 
-    is_email_already_taken = users.is_email_already_taken(username)
+    is_email_already_taken = users.is_email_already_taken(email)
+    print(f"Is email already taken: {is_email_already_taken}")
     if is_email_already_taken:
         return render_template("register.html", error_msg="Username Already Exists")
     session_token = generate_session_tokens(SESSION_TOKEN_LENGTH)
