@@ -13,9 +13,20 @@ def get_tickets():
         return redirect(url_for("auth.about"))
     
     email = users.get_email_by_token(session_token)
-    t = ticket.get_ticket_by_email(email)
-
-    return render_template("tickets.html")
+    print(f"Email: {email}")
+    ticks = ticket.get_ticket_by_email(email)
+    t_len = len(ticks)
+    t_resolved = 0
+    t_inprogress = 0
+    t_registered = 0
+    for tick in ticks:
+        if tick.status == "In Progress":
+            t_inprogress+=1
+        elif tick.status == "Resolved":
+            t_resolved+=1
+        else:
+            t_registered+=1
+    return render_template("tickets.html", tickets=ticks, length=t_len, t_inprogress=t_inprogress, t_resolved=t_resolved, t_registered=t_registered)
 
 @ticket_bp.route("/ticket_details", methods=['GET'])
 def ticket_details():
