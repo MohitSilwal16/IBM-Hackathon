@@ -1,6 +1,6 @@
 from . import auth_bp
 from flask import request, make_response, render_template, redirect, url_for
-from utils.tokens import generate_random_tokens
+from utils.tokens import generate_session_tokens
 from db import users
 
 SESSION_TOKEN_LENGTH = 4
@@ -12,16 +12,22 @@ def register():
         return render_template("register.html")
     username = request.form.get("username")
     password = request.form.get("password")
-    upi_id = request.form.get("upi-id")
+    email = request.form.get("email")
 
-    is_username_already_taken = users.is_username_already_taken(username)
-    if is_username_already_taken:
+    is_email_already_taken = users.is_email_already_taken(username)
+    if is_email_already_taken:
         return render_template("register.html", error_msg="Username Already Exists")
+    session_token = generate_session_tokens(SESSION_TOKEN_LENGTH)
 
-    session_token = generate_random_tokens(SESSION_TOKEN_LENGTH)
-    users.create_user(username, password, upi_id, session_token)
+    user_obj = users.User(
+        email=email,
+        username=username,
+        password=password,
+        session_token=session_token,
+    )
+    users.create_user(user_obj)
 
-    res = make_response(redirect(url_for("park.index")))
+    res = make_response(redirect(url_for("bot.index")))
     res.set_cookie("session-token", session_token)
     return res
 
@@ -31,17 +37,17 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
-    username = request.form.get("username")
+    email = request.form.get("email")
     password = request.form.get("password")
 
-    user_authenticated = users.verify_password(username, password)
+    user_authenticated = users.verify_password(email, password)
     if not user_authenticated:
         return render_template("login.html", error_msg="Invalid Credentials")
 
-    session_token = generate_random_tokens(SESSION_TOKEN_LENGTH)
-    users.update_session_token(username, password, session_token)
+    session_token = generate_session_tokens(SESSION_TOKEN_LENGTH)
+    users.update_session_token(email, password, session_token)
 
-    res = make_response(redirect(url_for("park.index")))
+    res = make_response(redirect(url_for("bot.index")))
     res.set_cookie("session-token", session_token)
     return res
 

@@ -1,20 +1,20 @@
 from flask import Flask
 from db import db
 from handlers.auth import auth_bp
-from handlers.park import park_bp, UPLOAD_FOLDER
-from handlers.transactions import transactions_bp
+from handlers.bot import bot_bp
+from handlers.ticket import UPLOAD_FOLDER, ticket_bp
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///take-my-park.sqlite3"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///complaint.sqlite3"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 app.register_blueprint(auth_bp)
-app.register_blueprint(park_bp)
-app.register_blueprint(transactions_bp)
+app.register_blueprint(bot_bp)
+app.register_blueprint(ticket_bp)
 
 with app.app_context():
     db.create_all()
