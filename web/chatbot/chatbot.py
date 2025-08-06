@@ -1,5 +1,10 @@
-# from db import ticket
-from chatbot.myprompt import solution_prompt, similarity_check_prompt, severity_prompt
+from db import ticket
+from chatbot.myprompt import (
+    solution_prompt,
+    similarity_check_prompt,
+    severity_prompt,
+    category_prompt,
+)
 from langchain_ollama import OllamaLLM
 from langchain_core.runnables import RunnableSequence
 
@@ -8,6 +13,7 @@ llm = OllamaLLM(model="gemma3")  # e.g., "llama3", "mistral"
 solution_chain: RunnableSequence = solution_prompt | llm
 similarity_check_chain: RunnableSequence = similarity_check_prompt | llm
 severity_check_chain: RunnableSequence = severity_prompt | llm
+category_chain: RunnableSequence = category_prompt | llm
 
 
 def get_complain_solution(user_complain: str) -> str:
@@ -15,15 +21,19 @@ def get_complain_solution(user_complain: str) -> str:
 
 
 def get_severity_level(user_complain: str) -> str:
-    return severity_check_chain.invoke({"user_complain": user_complain})
+    return severity_check_chain.invoke({"user_complain": user_complain}).strip().title()
 
 
-# def get_similar_solution(user_complain: str) -> ticket.Ticket:
-#     resolved_tickets = ticket.get_resolved_tickets()
-#     for t in resolved_tickets:
-#         if t.main_description == user_complain:
-#             return t
-#     return None
+def get_category(user_complain: str) -> str:
+    return category_chain.invoke({"user_complain": user_complain}).strip()
+
+
+def get_similar_solution(user_complain: str) -> ticket.Ticket:
+    resolved_tickets = ticket.get_resolved_tickets()
+    for t in resolved_tickets:
+        if t.main_description == user_complain:
+            return t
+    return None
 
 
 if __name__ == "__main__":

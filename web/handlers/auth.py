@@ -1,6 +1,6 @@
 from . import auth_bp
 from flask import request, make_response, render_template, redirect, url_for
-from utils.tokens import generate_session_tokens
+from utils.tokens import generate_random_tokens
 from db import users, ticket
 
 SESSION_TOKEN_LENGTH = 4
@@ -34,7 +34,7 @@ def register():
     print(f"Is email already taken: {is_email_already_taken}")
     if is_email_already_taken:
         return render_template("register.html", error_msg="Username Already Exists")
-    session_token = generate_session_tokens(SESSION_TOKEN_LENGTH)
+    session_token = generate_random_tokens(SESSION_TOKEN_LENGTH)
 
     user_obj = users.User(
         email=email,
@@ -61,7 +61,7 @@ def login():
     if not user_authenticated:
         return render_template("login.html", error_msg="Invalid Credentials")
 
-    session_token = generate_session_tokens(SESSION_TOKEN_LENGTH)
+    session_token = generate_random_tokens(SESSION_TOKEN_LENGTH)
     users.update_session_token(email, password, session_token)
 
     res = make_response(redirect(url_for("bot.home")))

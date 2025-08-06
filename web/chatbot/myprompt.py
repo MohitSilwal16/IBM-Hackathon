@@ -33,12 +33,24 @@ You are a chatbot that analyzes user complaints and determines their severity le
 User Complaint: "{user_complain}"
 
 Classify the severity as one of the following (in lowercase only):
-- low
-- medium
-- high
-- urgent
+- Low
+- Medium
+- High
+- Urgent
 
 Base this on urgency, impact, and seriousness of the issue.  
 Respond with only one word: low, medium, or high. No explanations, no extra text.
+"""
+)
+
+category_prompt = PromptTemplate.from_template(
+    """
+You are a chatbot that assigns a brief, relevant title or category to a user complaint.
+
+User Complaint: "{user_complain}"
+
+Return a concise 2-3 word title or category that best describes the issue.  
+Examples: "Payment Failure", "Late Delivery", "Account Login", etc.  
+Respond with only the title — no explanations, no extra text.
 """
 )
