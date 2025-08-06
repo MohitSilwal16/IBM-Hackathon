@@ -2,7 +2,7 @@ from . import ticket_bp
 from flask import request, make_response, render_template, redirect, url_for
 from db import users, ticket
 
-UPLOAD_FOLDER = "static/uploads"
+UPLOAD_FOLDER = "static/"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 @ticket_bp.route("/ticket", methods=["GET"])
