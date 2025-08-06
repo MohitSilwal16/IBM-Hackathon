@@ -14,7 +14,10 @@ def get_tickets():
     
     email = users.get_email_by_token(session_token)
     print(f"Email: {email}")
-    ticks = ticket.get_ticket_by_email(email)
+    if email == "admin@gmail.com":
+        ticks = ticket.get_all_tickets()
+    else:
+       ticks = ticket.get_ticket_by_email(email)
     t_len = len(ticks)
     t_resolved = 0
     t_inprogress = 0
