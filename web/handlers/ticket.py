@@ -1,7 +1,6 @@
 from . import ticket_bp
 from flask import request, make_response, render_template, redirect, url_for
 from db import users, ticket
-from ticket import get_tickets
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
