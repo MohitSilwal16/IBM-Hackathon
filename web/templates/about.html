@@ -53,35 +53,61 @@
 </head>
 
 <body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="{{ url_for('bot.home') }}"
-                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-                        <a href="{{ url_for('auth.about') }}"
-                            class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
-                        <a href="{{ url_for('auth.login') }}"
-                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Login</a>
-                        <a href="{{ url_for('auth.register') }}"
-                            class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">Register</a>
-                    </div>
-                </div>
-                <div class="md:hidden">
-                    <button class="text-gray-600 hover:text-gray-900">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
+<!-- Navigation -->
+<nav class="bg-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
         </div>
-    </nav>
+      </div>
+      <!-- Desktop Menu -->
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-baseline space-x-4">
+          <a href="{{ url_for('bot.home') }}"
+            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+          <a href="{{ url_for('auth.about') }}"
+            class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+          <a href="{{ url_for('auth.login') }}"
+            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Login</a>
+          <a href="{{ url_for('auth.register') }}"
+            class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">Register</a>
+        </div>
+      </div>
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="md:hidden hidden mt-2">
+      <div class="flex flex-col space-y-2 bg-white py-4 px-4 rounded-lg shadow">
+        <a href="{{ url_for('bot.home') }}"
+          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+        <a href="{{ url_for('auth.about') }}"
+          class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+        <a href="{{ url_for('auth.login') }}"
+          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Login</a>
+        <a href="{{ url_for('auth.register') }}"
+          class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">Register</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Navbar Toggle Script -->
+<script>
+  const mobileMenuBtn = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>
+
 
     <!-- Hero Section -->
     <section class="gradient-bg py-20">
