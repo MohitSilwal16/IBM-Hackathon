@@ -6,6 +6,7 @@ class Ticket(db.Model):
     __tablename__ = "tickets"
 
     ticket_id = db.Column(db.String(20), primary_key=True)
+    main_description = db.Column(db.String(500), nullable=False)
     user_email = db.Column(db.String(30), db.ForeignKey("users.email"), nullable=False)
     question1 = db.Column(db.String(100), nullable=False)
     question2 = db.Column(db.String(100), nullable=False)
