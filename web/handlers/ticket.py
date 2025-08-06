@@ -16,3 +16,7 @@ def get_tickets():
     t = ticket.get_ticket_by_email(email)
 
     return render_template("tickets.html")
+
+@ticket_bp.route("/ticket_details", methods=['GET'])
+def ticket_details():
+    return render_template("ticket_details.html")

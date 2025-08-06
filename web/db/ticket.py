@@ -12,6 +12,7 @@ class Ticket(db.Model):
     remark = db.Column(db.String(500), nullable=False)
     category = db.Column(db.String(30), nullable=False)
     priority = db.Column(db.String(10), nullable=False)
+    image_url = db.Column(db.String(100))
 
     __table_args__ = (
         CheckConstraint("status IN ('Registered', 'In Progress', 'Resolved')", name='check_status_valid'),
