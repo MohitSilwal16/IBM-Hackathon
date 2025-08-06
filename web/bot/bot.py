@@ -1,72 +1,26 @@
-# import sqlite3
-# from datetime import datetime
-# from db import parking
+from langchain.prompts import PromptTemplate
+from langchain_ollama import OllamaLLM
+from langchain_core.runnables import RunnableSequence
 
-# from langchain.prompts import PromptTemplate
-# from langchain_ollama import OllamaLLM
-# from langchain_core.runnables import RunnableSequence
+llm = OllamaLLM(model="gemma3")  # e.g., "llama3", "mistral"
+solution_prompt = PromptTemplate.from_template(
+    """
+You're a problem-solving chatbot specialized in the E-Commerce domain.
+User Complaint: "{user_complain}"
+If the complaint is NOT related to E-Commerce (e.g., product issues, payments, delivery, returns, account, cart, offers, orders, etc.), reply: "Sorry, I can only help with E-Commerce related problems."
+Else it IS related, assume the problem occurred on the user's respective E-Commerce website. List ALL possible solutions in plain text only. No markdown, no follow-up questions, no extra commentary. Be clear, concise, and exhaustive.
+"""
+)
 
-# llm = OllamaLLM(model="gemma3")  # e.g., "llama3", "mistral"
-# prompt = PromptTemplate.from_template(
-#     """
-# You are an expert SQL Generator.
-
-# Below is the schema of the table `parking`:
-
-# Table: parking  
-# Columns:
-# - parking_id (STRING, PRIMARY KEY)
-# - username (STRING, FOREIGN KEY -> users.username, NOT NULL)
-# - location_link (STRING, NOT NULL)
-# - price_per_hour (FLOAT, NOT NULL)
-# - available_from (DATETIME, NOT NULL)
-# - available_till (DATETIME, NOT NULL)
-# - image_url (STRING, NOT NULL)
-
-# Given the user request below, write a valid raw SQL query for the schema above.
-
-# User request: "{user_input}"
-# Return ONLY the SQL as plain text.
-# """
-# )
-
-# chain: RunnableSequence = prompt | llm
-# DB_PATH = "./instance/take-my-park.sqlite3"
+solution_chain: RunnableSequence = solution_prompt | llm
 
 
-# def get_filtered_parkings(user_inp: str) -> list[parking.Parking]:
-#     query: str = chain.invoke({"user_input": user_inp})
-#     query = query.replace("`", "")
-#     query = query.replace("sql", "")
-
-#     conn = sqlite3.connect(DB_PATH)
-#     cursor = conn.cursor()
-
-#     try:
-#         cursor.execute(query)
-#         rows = cursor.fetchall()
-
-#         filtered_parkings = []
-#         for row in rows:
-#             p = parking.Parking(
-#                 parking_id=row[0],
-#                 username=row[1],
-#                 location_link=row[2],
-#                 price_per_hour=float(row[3]),
-#                 available_from=datetime.strptime(row[4], "%Y-%m-%d %H:%M:%S.%f"),
-#                 available_till=datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S.%f"),
-#                 image_url=row[6],
-#             )
-#             filtered_parkings.append(p)
-#     except Exception as err:
-#         print(f"Exception in Query: {query}\nError: {err}")
-#         return []
-#     finally:
-#         conn.close()
-#     return filtered_parkings
+def get_complain_solution(user_complain: str) -> str:
+    return solution_chain.invoke({"user_complain": user_complain})
 
 
-# if __name__ == "__main__":
-#     msg = "Find a parking spot near b'twin 1PM to 2PM on 26 July 2025"
-#     res = get_filtered_parkings(msg)
-#     print(f"Res: \n{res}")
+if __name__ == "__main__":
+    user_complain = "My Wifi Router is not Working"
+    user_complain = "Unable to do an UPI Transaction"
+    res = get_complain_solution(user_complain)
+    print(f"Res: \n{res}")
