@@ -5,6 +5,13 @@ from db import users
 
 SESSION_TOKEN_LENGTH = 4
 
+@auth_bp.route("/about", methods=["GET"])
+def about():
+    return render_template("about.html")
+
+@auth_bp.route("/profile", methods=["GET"])
+def profile():
+    return render_template("profile.html")
 
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
