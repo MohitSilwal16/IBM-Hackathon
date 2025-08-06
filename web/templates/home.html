@@ -1,208 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Assistant - SwiftResolve</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
-      * {
-        font-family: "Inter", sans-serif;
-      }
-
-      .gradient-text {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-
-      .chat-container {
-        height: calc(100vh - 200px);
-      }
-
-      .message-animation {
-        animation: slideIn 0.3s ease-out;
-      }
-
-      @keyframes slideIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
+        * {
+            font-family: "Inter", sans-serif;
         }
 
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .typing-indicator {
-        animation: pulse 1.5s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 0.4;
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        50% {
-          opacity: 1;
-        }
-      }
-
-      .floating-animation {
-        animation: float 3s ease-in-out infinite;
-      }
-
-      @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0px);
+        .chat-container {
+            height: calc(100vh - 200px);
         }
 
-        50% {
-          transform: translateY(-5px);
+        .message-animation {
+            animation: slideIn 0.3s ease-out;
         }
-      }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .typing-indicator {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .floating-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
     </style>
-  </head>
+</head>
 
-  <body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen">
     <!-- Navigation -->
     <nav class="bg-white shadow-lg sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <div class="flex items-center">
-            <div class="flex-shrink-0">
-              <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="{{ url_for('bot.home') }}"
+                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                        <a href="{{ url_for('ticket.get_tickets') }}"
+                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">My
+                            Tickets</a>
+                        <a href="{{ url_for('auth.profile') }}"
+                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
+                        <a href="{{ url_for('auth.logout') }}"
+                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
             </div>
-          </div>
-          <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-4">
-              <a
-                href="{{ url_for('bot.home') }}"
-                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Home</a
-              >
-              <a
-                href="{{ url_for('ticket.get_tickets') }}"
-                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >My Tickets</a
-              >
-              <a
-                href="{{ url_for('auth.profile') }}"
-                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Profile</a
-              >
-              <a
-                href="{{ url_for('auth.logout') }}"
-                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Logout</a
-              >
-            </div>
-          </div>
-          <div class="md:hidden">
-            <button class="text-gray-600 hover:text-gray-900">
-              <i class="fas fa-bars text-xl"></i>
-            </button>
-          </div>
         </div>
-      </div>
     </nav>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid lg:grid-cols-4 gap-8">
-        <!-- Chat Interface -->
-        <div class="lg:col-span-3">
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <!-- Chat Header -->
-            <div
-              class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4"
-            >
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                  <div
-                    class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center floating-animation"
-                  >
-                    <i class="fas fa-robot text-white"></i>
-                  </div>
-                  <div>
-                    <h2 class="text-white font-semibold">
-                      AI Support Assistant
-                    </h2>
-                    <p class="text-white text-sm opacity-90">
-                      Online • Ready to help
-                    </p>
-                  </div>
-                </div>
-                <div class="flex items-center space-x-2"></div>
-              </div>
-            </div>
+        <div class="grid lg:grid-cols-4 gap-8">
+            <!-- Chat Interface -->
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <!-- Chat Header -->
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div
+                                    class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center floating-animation">
+                                    <i class="fas fa-robot text-white"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-white font-semibold">
+                                        AI Support Assistant
+                                    </h2>
+                                    <p class="text-white text-sm opacity-90">
+                                        Online • Ready to help
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2"></div>
+                        </div>
+                    </div>
 
-            <!-- Chat Messages -->
-            <div class="chat-container overflow-y-auto p-6 space-y-4">
-              <!-- AI Welcome Message -->
-              <div class="flex items-start space-x-3 message-animation">
-                <div
-                  class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0"
-                >
-                  <i class="fas fa-robot text-indigo-600 text-sm"></i>
-                </div>
-                <div
-                  class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md"
-                >
-                  <p class="text-gray-800">
-                    Hello! I'm your AI support assistant. I'm here to help you
-                    resolve any issues with your recent orders. How can I assist
-                    you today?
-                  </p>
-                </div>
-              </div>
+                    <!-- Chat Messages -->
+                    <div class="chat-container overflow-y-auto p-6 space-y-4">
+                        <!-- AI Welcome Message -->
+                        <div class="flex items-start space-x-3 message-animation">
+                            <div
+                                class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-robot text-indigo-600 text-sm"></i>
+                            </div>
+                            <div class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md">
+                                <p class="text-gray-800">
+                                    Hello! I'm your AI support assistant. I'm here to help you
+                                    resolve any issues with your recent orders. How can I assist
+                                    you today?
+                                </p>
+                            </div>
+                        </div>
 
-              <!-- User Message -->
-              {% if user_complain != "" %}
-              <div
-                class="flex items-start space-x-3 justify-end message-animation"
-              >
-                <div
-                  class="bg-indigo-600 rounded-2xl rounded-tr-sm px-4 py-3 max-w-md"
-                >
-                  <p class="text-white">{{ user_complain }}</p>
-                </div>
-                <div
-                  class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0"
-                >
-                  <i class="fas fa-user text-white text-sm"></i>
-                </div>
-              </div>
-              {% endif %}
+                        <!-- User Message -->
+                        {% if user_complain != "" %}
+                        <div class="flex items-start space-x-3 justify-end message-animation">
+                            <div class="bg-indigo-600 rounded-2xl rounded-tr-sm px-4 py-3 max-w-md">
+                                <p class="text-white">{{ user_complain }}</p>
+                            </div>
+                            <div
+                                class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                        </div>
+                        {% endif %}
 
-              <!-- AI Response -->
-              {% if bot_response != "" %}
-              <div class="flex items-start space-x-3 message-animation">
-                <div
-                  class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0"
-                >
-                  <i class="fas fa-robot text-indigo-600 text-sm"></i>
-                </div>
-                <div
-                  class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md"
-                >
-                  <p class="text-gray-800">{{bot_response | safe}}</p>
-                </div>
-              </div>
-              {% endif %}
+                        <!-- AI Response -->
+                        {% if bot_response != "" %}
+                        <div class="flex items-start space-x-3 message-animation">
+                            <div
+                                class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-robot text-indigo-600 text-sm"></i>
+                            </div>
+                            <div class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md">
+                                <p class="text-gray-800">{{bot_response | safe}}</p>
+                            </div>
+                        </div>
+                        {% endif %}
 
-              <!-- File Upload Section -->
-              <!-- <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 message-animation">
+                        <!-- Feedback buttons -->
+                        {% if bot_response != "" %}
+                        <div class="flex items-center space-x-4 mt-4 ml-12">
+                            <span class="text-gray-700 font-medium">Is this response satisfactory?</span>
+                            <button type="button" onclick="handleFeedback(true)"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg focus:outline-none transition-colors">
+                                Yes
+                            </button>
+                            <button type="button" onclick="handleFeedback(false)"
+                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg focus:outline-none transition-colors">
+                                No
+                            </button>
+                        </div>
+                        {% endif %}
+
+                        <!-- File Upload Section -->
+                        {% if bot_response != "" %}
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 message-animation">
                             <p class="text-blue-800 font-medium mb-3">Upload Supporting Documents</p>
                             <div class="border-2 border-dashed border-blue-300 rounded-lg p-6 text-center">
                                 <i class="fas fa-cloud-upload-alt text-blue-400 text-3xl mb-3"></i>
@@ -214,125 +205,106 @@
                                     Choose Files
                                 </button>
                             </div>
-                        </div> -->
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    <!-- Chat Input -->
+                    <form class="border-t border-gray-200 p-4" method="POST" action="{{ url_for('bot.message') }}">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-1 relative">
+                                <input type="text" autofocus placeholder="Type your message..." id="com" name="com"
+                                    class="w-full border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                            </div>
+                            <button type="submit"
+                                class="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <!-- Chat Input -->
-            <form
-              class="border-t border-gray-200 p-4"
-              method="POST"
-              action="{{ url_for('bot.message') }}"
-            >
-              <div class="flex items-center space-x-3">
-                <div class="flex-1 relative">
-                  <input
-                    type="text"
-                    autofocus
-                    placeholder="Type your message..."
-                    id="com"
-                    name="com"
-                    class="w-full border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  />
+            <!-- Sidebar -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Recent Tickets -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        Recent Tickets
+                    </h3>
+                    <div class="space-y-3">
+                        <div
+                            class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-900">#TK-2024-001</span>
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Resolved</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Order delivery delay</p>
+                            <p class="text-xs text-gray-500 mt-1">2 days ago</p>
+                        </div>
+
+                        <div
+                            class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-900">#TK-2024-002</span>
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">In
+                                    Progress</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Refund request</p>
+                            <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                        </div>
+
+                        <div
+                            class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-900">#TK-2024-003</span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Open</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Product quality issue</p>
+                            <p class="text-xs text-gray-500 mt-1">Today</p>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('ticket.get_tickets') }}"
+                        class="block mt-4 text-center text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                        View All Tickets
+                    </a>
                 </div>
-                <button
-                  type="submit"
-                  class="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors"
-                >
-                  <i class="fas fa-paper-plane"></i>
-                </button>
-              </div>
-            </form>
-          </div>
+
+                <!-- Support Hours -->
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
+                    <h3 class="text-lg font-semibold mb-3">Support Hours</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>AI Assistant:</span>
+                            <span>24/7</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Human Agents:</span>
+                            <span>9 AM - 6 PM</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-white border-opacity-20">
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                            <span class="text-sm">Currently Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Sidebar -->
-        <div class="lg:col-span-1 space-y-6">
-          <!-- Recent Tickets -->
-          <div class="bg-white rounded-xl shadow-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">
-              Recent Tickets
-            </h3>
-            <div class="space-y-3">
-              <div
-                class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors cursor-pointer"
-              >
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm font-medium text-gray-900"
-                    >#TK-2024-001</span
-                  >
-                  <span
-                    class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
-                    >Resolved</span
-                  >
-                </div>
-                <p class="text-sm text-gray-600">Order delivery delay</p>
-                <p class="text-xs text-gray-500 mt-1">2 days ago</p>
-              </div>
-
-              <div
-                class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors cursor-pointer"
-              >
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm font-medium text-gray-900"
-                    >#TK-2024-002</span
-                  >
-                  <span
-                    class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full"
-                    >In Progress</span
-                  >
-                </div>
-                <p class="text-sm text-gray-600">Refund request</p>
-                <p class="text-xs text-gray-500 mt-1">1 day ago</p>
-              </div>
-
-              <div
-                class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors cursor-pointer"
-              >
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm font-medium text-gray-900"
-                    >#TK-2024-003</span
-                  >
-                  <span
-                    class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
-                    >Open</span
-                  >
-                </div>
-                <p class="text-sm text-gray-600">Product quality issue</p>
-                <p class="text-xs text-gray-500 mt-1">Today</p>
-              </div>
-            </div>
-            <a
-              href="{{ url_for('ticket.get_tickets') }}"
-              class="block mt-4 text-center text-indigo-600 hover:text-indigo-700 text-sm font-medium"
-            >
-              View All Tickets
-            </a>
-          </div>
-
-          <!-- Support Hours -->
-          <div
-            class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white"
-          >
-            <h3 class="text-lg font-semibold mb-3">Support Hours</h3>
-            <div class="space-y-2 text-sm">
-              <div class="flex justify-between">
-                <span>AI Assistant:</span>
-                <span>24/7</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Human Agents:</span>
-                <span>9 AM - 6 PM</span>
-              </div>
-            </div>
-            <div class="mt-4 pt-4 border-t border-white border-opacity-20">
-              <div class="flex items-center">
-                <div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                <span class="text-sm">Currently Online</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </body>
+    <script>
+
+        function handleFeedback(isSatisfactory) {
+            if (isSatisfactory) {
+                window.location.href = "{{ url_for('bot.home') }}";
+            } else {
+                document.getElementById('improve-box').classList.remove('hidden');
+            }
+        }
+    </script>
+
+</body>
+
 </html>
