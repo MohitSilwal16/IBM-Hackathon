@@ -54,3 +54,10 @@ def get_tickets_sorted_by_priority() -> list[Ticket]:
 
 def get_ticket_by_ticket_id(ticket_id: str) -> Ticket:
     return Ticket.query.filter_by(ticket_id=ticket_id).first()
+
+def update_remarks(ticket_id: str, remarks: str) -> None:
+    t = Ticket.query.filter(ticket_id=ticket_id).first()
+    if not t:
+        return None
+    t.remarks = remarks
+    db.session.commit()
