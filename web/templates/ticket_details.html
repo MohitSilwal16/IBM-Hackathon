@@ -1,38 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ticket Details - SwiftResolve</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 
-    <!-- Font Awesome -->
-    <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    rel="stylesheet"
-    />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-    <!-- Google Font for Consistency -->
-    <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
     * {
-        font-family: "Inter", sans-serif;
+      font-family: 'Inter', sans-serif;
     }
 
     .gradient-text {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    </style>
+
+    .card-3d {
+      transform: perspective(1000px) rotateX(2deg);
+      transition: all 0.3s ease;
+    }
+
+    .card-3d:hover {
+      transform: perspective(1000px) rotateX(0deg) translateY(-2px);
+    }
+
+    .ticket-card {
+      transition: all 0.3s ease;
+    }
+
+    .ticket-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 </head>
 
 <body class="bg-gray-50 min-h-screen">
   <!-- Navigation -->
   <nav class="bg-white shadow-lg sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
           <div class="flex-shrink-0">
             <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
@@ -40,10 +54,14 @@
         </div>
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-4">
-            <a href="{{ url_for('bot.home') }}" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-            <a href="{{ url_for('ticket.get_tickets') }}" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">My Tickets</a>
-            <a href="{{ url_for('auth.profile') }}" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
-            <a href="{{ url_for('auth.logout') }}" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+            <a href="{{ url_for('bot.home') }}"
+              class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+            <a href="{{ url_for('ticket.get_tickets') }}"
+              class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tickets</a>
+            <a href="{{ url_for('auth.profile') }}"
+              class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
+            <a href="{{ url_for('auth.logout') }}"
+              class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
           </div>
         </div>
         <div class="md:hidden">
@@ -55,44 +73,96 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold mb-4 text-indigo-600">Ticket Details - #TK-2024-003</h1>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Details Card -->
+    <div class="ticket-card bg-white rounded-xl shadow-lg p-8 border-l-4 border-indigo-500">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-indigo-600 mb-2">Ticket Details</h1>
+          <div class="flex items-center space-x-4 text-sm text-gray-500">
+            <span class="font-semibold text-gray-800">Ticket #TK-2024-003</span>
+            <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">High Priority</span>
+            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Open</span>
+          </div>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <a href="{{ url_for('ticket.get_tickets') }}"
+            class="inline-block text-indigo-600 hover:underline text-md font-medium transition">
+            ← Back to Tickets
+          </a>
+        </div>
+      </div>
 
-      <!-- Ticket Info -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
-        <div><strong>Ticket ID:</strong> Product Quality Issue - Damaged Item Received</div>
-        <div><strong>Status:</strong> <span class="text-blue-600 font-medium">Open</span></div>
-        <div><strong>Priority:</strong> <span class="text-red-600 font-semibold">High</span></div>
-        <div><strong>Reported By:</strong> user@example.com</div>
+      <!-- Ticket Info Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-8">
+        <div>
+          <p><span class="font-semibold text-gray-700">Category:</span>
+            Product Quality Issue - Damaged Item Received</p>
+        </div>
+        <div>
+          <p><span class="font-semibold text-gray-700">Reported By:</span>
+            user@example.com</p>
+        </div>
       </div>
 
       <!-- Description -->
-      <div class="mb-6">
+      <div class="mb-8">
         <h2 class="text-lg font-semibold mb-2">📝 Problem Description</h2>
-        <p>
+        <p class="text-gray-700 leading-relaxed">
           The laptop I received yesterday has a cracked screen and torn packaging.
           I need a replacement or a full refund as soon as possible.
         </p>
+      </div>
+
+      <!-- Attachments -->
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold mb-2">🖼 Attachment</h2>
+        {% if ticket.image_url %}
+        <img src="{{ url_for('static', filename='uploads/' + ticket.image_url) }}"
+          alt="Attached Evidence"
+          class="w-full max-w-md border rounded-lg shadow-md" />
+        {% else %}
+        <p class="text-sm text-gray-500">No image was attached with this complaint.</p>
+        {% endif %}
       </div>
 
       <!-- Remarks -->
-      <div class="mb-6">
-        <h2 class="text-lg font-semibold mb-2">💬 Remarks</h2>
-        <p>
-          The laptop I received yesterday has a cracked screen and torn packaging.
-          I need a replacement or a full refund as soon as possible.
-        </p>
+      <div class="mb-6" id="remarks-section">
+        <h2 class="text-lg font-semibold mb-2 mt-8">💬 Remarks</h2>
+
+        <!-- Textarea to enter remarks -->
+        <textarea id="remarkInput"
+          class="w-full p-2 border rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400" rows="3"
+          placeholder="Write your remark here..."></textarea>
+
+        <!-- Post Button with gradient -->
+        <div class="mt-2">
+          <button id="postRemarkBtn"
+            class="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white px-4 py-1 rounded shadow-md font-medium transition-all hover:from-[#5a67d8] hover:to-[#6b21a8] focus:outline-none">Post</button>
+        </div>
+
+        <!-- Display saved remark here -->
+        <div id="savedRemark" class="mt-4 text-gray-800 hidden"></div>
       </div>
 
-      <!-- Back -->
-      <div class="mt-6">
-        <a href="{{ url_for('ticket.get_tickets') }}" class="text-indigo-600 hover:underline text-sm">
-          ← Back to Tickets
-        </a>
-      </div>
+      <script>
+        const remarkInput = document.getElementById('remarkInput');
+        const postBtn = document.getElementById('postRemarkBtn');
+        const savedRemark = document.getElementById('savedRemark');
+
+        postBtn.onclick = () => {
+          const remark = remarkInput.value.trim();
+          if (remark) {
+            savedRemark.textContent = remark;
+            savedRemark.classList.remove('hidden');
+            remarkInput.classList.add('hidden');
+            postBtn.classList.add('hidden');
+          }
+        };
+      </script>
     </div>
   </div>
 </body>
+
 </html>
