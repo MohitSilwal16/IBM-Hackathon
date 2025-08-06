@@ -1,4 +1,4 @@
 open-db:
-	sqlite3 instance/take-my-park.sqlite3
+	sqlite3 instance/complaint.sqlite3
 run:
 	py -B main.py

@@ -8,7 +8,7 @@ solution_prompt = PromptTemplate.from_template(
 You're a problem-solving chatbot specialized in the E-Commerce domain.
 User Complaint: "{user_complain}"
 If the complaint is NOT related to E-Commerce (e.g., product issues, payments, delivery, returns, account, cart, offers, orders, etc.), reply: "Sorry, I can only help with E-Commerce related problems."
-Else it IS related, assume the problem occurred on the user's respective E-Commerce website. List ALL possible solutions in plain text only. No markdown, no follow-up questions, no extra commentary. Be clear, concise, and exhaustive.
+If it IS related, assume the problem occurred on the user's respective E-Commerce website. List ALL possible solutions in plain text only. No markdown, no follow-up questions, no extra commentary. Be clear, concise, and exhaustive.
 """
 )
 
@@ -21,6 +21,6 @@ def get_complain_solution(user_complain: str) -> str:
 
 if __name__ == "__main__":
     user_complain = "My Wifi Router is not Working"
-    user_complain = "Unable to do an UPI Transaction"
+    user_complain = "Unable to do an UPI Transaction while Purchasing Laptop from Amazon"
     res = get_complain_solution(user_complain)
     print(f"Res: \n{res}")
