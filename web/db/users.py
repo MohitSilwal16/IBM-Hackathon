@@ -51,3 +51,6 @@ def is_email_already_taken(email: str) -> bool:
 
 def get_email_by_token(session_token: str) -> str:
     return User.query.filter_by(session_token=session_token).first().email
+
+def get_username_from_token(session_token: str) -> str:
+    return User.query.filter_by(session_token=session_token).first().username

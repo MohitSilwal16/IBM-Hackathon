@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ticket Details - SwiftResolve</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    rel="stylesheet"
+    />
+
+    <!-- Google Font for Consistency -->
+    <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+    * {
+        font-family: "Inter", sans-serif;
+    }
+
+    .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
+          </div>
+        </div>
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-4">
+            <a href="{{ url_for('bot.home') }}" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+            <a href="{{ url_for('ticket.get_tickets') }}" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">My Tickets</a>
+            <a href="{{ url_for('auth.profile') }}" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+            <a href="{{ url_for('auth.logout') }}" class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+          </div>
+        </div>
+        <div class="md:hidden">
+          <button class="text-gray-600 hover:text-gray-900">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h1 class="text-2xl font-bold mb-4 text-indigo-600">Ticket Details - #TK-2024-003</h1>
+
+      <!-- Ticket Info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
+        <div><strong>Title:</strong> Product Quality Issue - Damaged Item Received</div>
+        <div><strong>Status:</strong> <span class="text-blue-600 font-medium">Open</span></div>
+        <div><strong>Priority:</strong> <span class="text-red-600 font-semibold">High</span></div>
+        <div><strong>Submitted On:</strong> 2025-08-06 at 2:30 PM</div>
+        <div><strong>Assigned To:</strong> AI Assistant</div>
+        <div><strong>Reported By:</strong> user@example.com</div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">📝 Problem Description</h2>
+        <p>
+          The laptop I received yesterday has a cracked screen and torn packaging.
+          I need a replacement or a full refund as soon as possible.
+        </p>
+      </div>
+
+      <!-- Solutions -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">✅ Solutions Provided</h2>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li>Initial response sent to customer</li>
+          <li>Requested images of damaged item</li>
+          <li>Forwarded complaint to product team</li>
+        </ul>
+      </div>
+
+      <!-- Frequency -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">🔁 Issue Frequency</h2>
+        <p>This issue has occurred 3 times for similar products in the past 2 months.</p>
+      </div>
+
+      <!-- Logs -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">📜 Action Timeline</h2>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>🕒 2025-08-06 2:30 PM – Ticket created</li>
+          <li>🕒 2025-08-06 2:45 PM – Auto-response sent</li>
+          <li>🕒 2025-08-06 3:15 PM – Customer replied with images</li>
+          <li>🕒 2025-08-06 4:00 PM – Escalated to quality assurance team</li>
+        </ul>
+      </div>
+
+      <!-- Back -->
+      <div class="mt-6">
+        <a href="{{ url_for('ticket.get_tickets') }}" class="text-indigo-600 hover:underline text-sm">
+          ← Back to Tickets
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

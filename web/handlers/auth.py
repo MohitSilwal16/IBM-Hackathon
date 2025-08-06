@@ -1,7 +1,7 @@
 from . import auth_bp
 from flask import request, make_response, render_template, redirect, url_for
 from utils.tokens import generate_session_tokens
-from db import users
+from db import users, ticket
 
 SESSION_TOKEN_LENGTH = 4
 
@@ -11,7 +11,16 @@ def about():
 
 @auth_bp.route("/profile", methods=["GET"])
 def profile():
-    return render_template("profile.html")
+    session_token = request.cookies.get("session-token")
+    is_session_token_valid = users.is_session_token_valid(session_token)
+    if not is_session_token_valid:
+        return redirect(url_for("auth.about"))
+    
+    email = users.get_email_by_token(session_token)
+    ticks = ticket.get_ticket_by_email(email)
+    t_len = len(ticks)
+    username = users.get_username_from_token(session_token)
+    return render_template("profile.html", email=email, username=username, t_len=t_len)
 
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():

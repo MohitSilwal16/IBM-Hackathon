@@ -1,11 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    Profile
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - SwiftResolve</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome for icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Google Fonts & Custom Styling -->
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      * {
+        font-family: "Inter", sans-serif;
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .chat-container {
+        height: calc(100vh - 200px);
+      }
+
+      .message-animation {
+        animation: slideIn 0.3s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .typing-indicator {
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .floating-animation {
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 text-gray-800">
+    <!-- Navbar -->
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <div class="flex items-center">
+            <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+            <a
+                href="{{ url_for('bot.home') }}"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Home</a
+            >
+            <a
+                href="{{ url_for('ticket.get_tickets') }}"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >My Tickets</a
+            >
+            <a
+                href="{{ url_for('auth.profile') }}"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Profile</a
+            >
+            <a
+                href="{{ url_for('auth.logout') }}"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Logout</a
+            >
+            </div>
+        </div>
+
+        <!-- Mobile Menu Icon -->
+        <div class="md:hidden">
+            <button class="text-gray-600 hover:text-gray-900">
+            <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        </div>
+    </div>
+    </nav>
+
+
+    <!-- Profile Card -->
+    <div class="max-w-5xl mx-auto mt-10 bg-white rounded-xl shadow p-8">
+      <div class="flex items-center gap-6 mb-6">
+        <div
+          id="initials"
+          class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-3xl flex items-center justify-center rounded-full font-bold"
+        >
+          U
+        </div>
+        <div>
+          <h2 id="username" class="text-2xl font-semibold">{{username}}</h2>
+          <p id="email" class="text-gray-500">{{email}}</p>
+        </div>
+      </div>
+
+      <div class="border-t pt-6">
+        <h3 class="text-lg font-semibold text-indigo-600 mb-4">Account Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div><span class="font-semibold text-gray-600">Email:</span> <span id="info-email">{{email}}</span></div>
+          <div><span class="font-semibold text-gray-600">Username:</span> <span id="info-username">{{username}}</span></div>
+          <div><span class="font-semibold text-gray-600">Total Tickets:</span> <span id="info-tickets">{{t_len}}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dummy JS Data Injection -->
+  </body>
 </html>
