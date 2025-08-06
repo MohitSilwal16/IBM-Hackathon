@@ -51,3 +51,6 @@ def get_tickets_sorted_by_priority() -> list[Ticket]:
         else_=5
     )
     return Ticket.query.order_by(priority_order).all()
+
+def get_ticket_by_ticket_id(ticket_id: str) -> Ticket:
+    return Ticket.query.filter_by(ticket_id=ticket_id).first()

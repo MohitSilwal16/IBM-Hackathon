@@ -31,6 +31,22 @@ def get_tickets():
             t_registered+=1
     return render_template("tickets.html", tickets=ticks, length=t_len, t_inprogress=t_inprogress, t_resolved=t_resolved, t_registered=t_registered)
 
-@ticket_bp.route("/ticket_details", methods=['GET'])
-def ticket_details():
-    return render_template("ticket_details.html")
+@ticket_bp.route("/ticket_details/<ticket_id>", methods=['GET'])
+def ticket_details(ticket_id: str):
+    session_token = request.cookies.get("session-token")
+    is_session_token_valid = users.is_session_token_valid(session_token)
+    if not is_session_token_valid:
+        return redirect(url_for("auth.about"))
+    t = ticket.get_ticket_by_ticket_id(ticket_id)
+    return render_template("ticket_details.html", ticket = t)
+
+@ticket_bp.route("/remarks", methods=['POST'])
+def remarks():
+    session_token = request.cookies.get("session-token")
+    is_session_token_valid = users.is_session_token_valid(session_token)
+    if not is_session_token_valid:
+        return redirect(url_for("auth.about"))
+    email = users.get_email_by_token(session_token)
+    if email!="admin@gmail.com":
+        pass
+    ticket_id = request.form.get('')
