@@ -1,7 +1,7 @@
 from . import ticket_bp
 from flask import request, make_response, render_template, redirect, url_for
 from db import users, ticket
-from ticket import ticket
+from ticket import get_tickets
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
@@ -15,5 +15,5 @@ def get_tickets():
     
     email = users.get_email_by_token(session_token)
     t = ticket.get_ticket_by_email(email)
-    
+
     return render_template("tickets.html")
