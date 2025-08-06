@@ -41,12 +41,17 @@ def ticket_details(ticket_id: str):
     return render_template("ticket_details.html", ticket = t)
 
 @ticket_bp.route("/remarks", methods=['POST'])
-def remarks():
+def add_remarks():
     session_token = request.cookies.get("session-token")
     is_session_token_valid = users.is_session_token_valid(session_token)
     if not is_session_token_valid:
         return redirect(url_for("auth.about"))
+
     email = users.get_email_by_token(session_token)
-    if email!="admin@gmail.com":
-        pass
-    ticket_id = request.form.get('')
+    if email != "admin@gmail.com":
+        return redirect(url_for("ticket.remarks"))
+
+    remarks = request.form.get('remarks')
+    ticket_id = request.form.get('ticket-id')
+    ticket.update_remarks(ticket_id, remarks)
+    return redirect(url_for('ticket.get_tickets'))
