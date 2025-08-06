@@ -93,7 +93,7 @@
                 >Home</a
               >
               <a
-                href="{{ url_for('ticket.ticket') }}"
+                href="{{ url_for('ticket.get_tickets') }}"
                 class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >My Tickets</a
               >
@@ -302,7 +302,7 @@
               </div>
             </div>
             <a
-              href="{{ url_for('ticket.ticket') }}"
+              href="{{ url_for('ticket.get_tickets') }}"
               class="block mt-4 text-center text-indigo-600 hover:text-indigo-700 text-sm font-medium"
             >
               View All Tickets
