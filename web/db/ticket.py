@@ -1,6 +1,5 @@
 from . import db
-from sqlalchemy import or_, CheckConstraint
-from datetime import datetime
+from sqlalchemy import or_, CheckConstraint, case
 
 class Ticket(db.Model):
     __tablename__ = "tickets"
@@ -35,14 +34,35 @@ class Ticket(db.Model):
         CheckConstraint("question8 IN ('A', 'B', 'C')", name='check_question8_validity'),
     )
 
-def add_complaint(ticket: Ticket) -> None:
+def add_ticket(ticket: Ticket) -> None:
     db.session.add(ticket)
     db.session.commit()
 
-def get_Ticket_by_username(username: str) -> list[Ticket]:
+def get_ticket_by_email(email: str) -> list[Ticket]:
     return (
         Ticket.query.filter(
-            Ticket.user_email == username
+            Ticket.user_email == email
         )
         .all()
     )
+
+def get_resolved_tickets() -> list[Ticket]:
+    return(
+        Ticket.query.filter(
+            Ticket.status == "Resolved"
+        )
+        .all()
+    )
+
+def get_all_tickets() -> list[Ticket]:
+    return Ticket.query.all()
+
+def get_tickets_sorted_by_priority() -> list[Ticket]:
+    priority_order = case(
+        (Ticket.priority == 'Urgent', 1),
+        (Ticket.priority == 'High', 2),
+        (Ticket.priority == 'Medium', 3),
+        (Ticket.priority == 'Low', 4),
+        else_=5
+    )
+    return Ticket.query.order_by(priority_order).all()
