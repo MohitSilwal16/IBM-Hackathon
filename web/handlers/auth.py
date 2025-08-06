@@ -34,7 +34,7 @@ def register():
     )
     users.create_user(user_obj)
 
-    res = make_response(redirect(url_for("bot.index")))
+    res = make_response(redirect(url_for("bot.home")))
     res.set_cookie("session-token", session_token)
     return res
 
@@ -54,7 +54,7 @@ def login():
     session_token = generate_session_tokens(SESSION_TOKEN_LENGTH)
     users.update_session_token(email, password, session_token)
 
-    res = make_response(redirect(url_for("bot.index")))
+    res = make_response(redirect(url_for("bot.home")))
     res.set_cookie("session-token", session_token)
     return res
 
