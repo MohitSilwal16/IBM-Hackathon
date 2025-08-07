@@ -53,6 +53,13 @@ class _MyWebViewPageState extends State<MyWebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: WebViewWidget(controller: _controller));
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: WebViewWidget(controller: _controller),
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 from . import db
 from sqlalchemy import or_, CheckConstraint, case
 
+
 class Ticket(db.Model):
     __tablename__ = "tickets"
 
@@ -15,49 +16,69 @@ class Ticket(db.Model):
     image_url = db.Column(db.String(100))
 
     __table_args__ = (
-        CheckConstraint("status IN ('Registered', 'In Progress', 'Resolved')", name='check_status_valid'),
-        CheckConstraint("priority IN ('Urgent', 'High', 'Medium', 'Low')", name='check_priority_valid'),
+        CheckConstraint(
+            "status IN ('Registered', 'In Progress', 'Resolved')",
+            name="check_status_valid",
+        ),
+        CheckConstraint(
+            "priority IN ('Urgent', 'High', 'Medium', 'Low')",
+            name="check_priority_valid",
+        ),
     )
+
 
 def add_ticket(ticket: Ticket) -> None:
     db.session.add(ticket)
     db.session.commit()
 
+
 def get_ticket_by_email(email: str) -> list[Ticket]:
-    return (
-        Ticket.query.filter(
-            Ticket.user_email == email
-        )
-        .all()
-    )
+    return Ticket.query.filter(Ticket.user_email == email).all()
+
 
 def get_resolved_tickets() -> list[Ticket]:
-    return(
-        Ticket.query.filter(
-            Ticket.status == "Resolved"
-        )
-        .all()
-    )
+    return Ticket.query.filter(Ticket.status == "Resolved").all()
 
-def get_all_tickets() -> list[Ticket]:
-    return Ticket.query.all()
 
-def get_tickets_sorted_by_priority() -> list[Ticket]:
+def get_all_tickets_sorted_by_priority() -> list[Ticket]:
     priority_order = case(
-        (Ticket.priority == 'Urgent', 1),
-        (Ticket.priority == 'High', 2),
-        (Ticket.priority == 'Medium', 3),
-        (Ticket.priority == 'Low', 4),
-        else_=5
+        (Ticket.status == "Resolved", 0),
+        (Ticket.priority == "Urgent", 4),
+        (Ticket.priority == "High", 3),
+        (Ticket.priority == "Medium", 2),
+        (Ticket.priority == "Low", 1),
+        else_=5,
     )
     return Ticket.query.order_by(priority_order).all()
+
+
+def get_all_tickets_by_email_sorted_by_priority(email: str) -> list[Ticket]:
+    priority_order = case(
+        (Ticket.status == "Resolved", 0),
+        (Ticket.priority == "Urgent", 4),
+        (Ticket.priority == "High", 3),
+        (Ticket.priority == "Medium", 2),
+        (Ticket.priority == "Low", 1),
+        else_=5,
+    )
+    return (
+        Ticket.query.filter(Ticket.user_email == email).order_by(priority_order).all()
+    )
+
 
 def get_ticket_by_ticket_id(ticket_id: str) -> Ticket:
     return Ticket.query.filter_by(ticket_id=ticket_id).first()
 
-def update_remarks(ticket_id: str, remarks: str) -> None:
-    t = Ticket.query.filter(ticket_id=ticket_id).first()
+
+def update_remarks(ticket_id: str, remark: str) -> None:
+    t = Ticket.query.filter_by(ticket_id=ticket_id).first()
+    print(f"T: {t}, {ticket_id}")
     if not t:
-        return None
-    t.remarks = remarks
+        return
+    t.remark = remark
+    t.status = "Resolved"
     db.session.commit()
+
+
+def get_user_mail_by_ticket_id(ticket_id: str) -> str:
+    return Ticket.query.filter_by(ticket_id=ticket_id).first().user_email
