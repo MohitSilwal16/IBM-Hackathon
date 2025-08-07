@@ -77,3 +77,7 @@ def update_remarks(ticket_id: str, remark: str) -> None:
     t.remark = remark
     t.status = "Resolved"
     db.session.commit()
+
+
+def get_user_mail_by_ticket_id(ticket_id: str) -> str:
+    return Ticket.query.filter_by(ticket_id=ticket_id).first().user_email

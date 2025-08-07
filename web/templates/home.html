@@ -1,327 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Assistant - SwiftResolve</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
-        * {
-            font-family: "Inter", sans-serif;
+      * {
+        font-family: "Inter", sans-serif;
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .chat-container {
+        height: calc(100vh - 200px);
+      }
+
+      .message-animation {
+        animation: slideIn 0.3s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .typing-indicator {
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.4;
         }
 
-        .chat-container {
-            height: calc(100vh - 200px);
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .floating-animation {
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
         }
 
-        .message-animation {
-            animation: slideIn 0.3s ease-out;
+        50% {
+          transform: translateY(-5px);
         }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .typing-indicator {
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 0.4;
-            }
-
-            50% {
-                opacity: 1;
-            }
-        }
-
-        .floating-animation {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-5px);
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body class="bg-gray-50 min-h-screen">
+  <body class="bg-gray-50 min-h-screen">
     <!-- Navigation -->
-    <!-- Navigation -->
-<nav class="bg-white shadow-lg sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
-      <div class="flex items-center">
-        <div class="flex-shrink-0">
-          <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
+            </div>
+          </div>
+          <!-- Desktop Menu -->
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <a
+                href="{{ url_for('bot.home') }}"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Home</a
+              >
+              <div class="relative inline-block">
+                {% if noti %}
+                <span
+                  class="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white shadow-sm animate-ping"
+                ></span>
+                <span
+                  class="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white shadow-sm"
+                ></span>
+                {% endif %}
+                <a
+                  href="{{ url_for('ticket.get_tickets') }}"
+                  class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Tickets
+                </a>
+              </div>
+              <a
+                href="{{ url_for('auth.profile') }}"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Profile</a
+              >
+              <a
+                href="{{ url_for('auth.logout') }}"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Logout</a
+              >
+            </div>
+          </div>
+          <!-- Mobile Hamburger -->
+          <div class="md:hidden">
+            <button
+              id="mobile-menu-button"
+              class="text-gray-600 hover:text-gray-900 focus:outline-none"
+            >
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="md:hidden hidden mt-2">
+          <div
+            class="flex flex-col space-y-2 bg-white py-4 px-4 rounded-lg shadow"
+          >
+            <a
+              href="{{ url_for('bot.home') }}"
+              class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >Home</a
+            >
+
+            <div>
+              {% if noti %}
+              <span
+                class="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white shadow-sm animate-ping"
+              ></span>
+              <span
+                class="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white shadow-sm"
+              ></span>
+              {% endif %}
+              <a
+                href="{{ url_for('ticket.get_tickets') }}"
+                class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Tickets</a
+              >
+            </div>
+            <a
+              href="{{ url_for('auth.profile') }}"
+              class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >Profile</a
+            >
+            <a
+              href="{{ url_for('auth.logout') }}"
+              class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >Logout</a
+            >
+          </div>
         </div>
       </div>
-      <!-- Desktop Menu -->
-      <div class="hidden md:block">
-        <div class="ml-10 flex items-baseline space-x-4">
-          <a href="{{ url_for('bot.home') }}"
-            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-          <a href="{{ url_for('ticket.get_tickets') }}"
-            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tickets</a>
-          <a href="{{ url_for('auth.profile') }}"
-            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
-          <a href="{{ url_for('auth.logout') }}"
-            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
-        </div>
-      </div>
-      <!-- Mobile Hamburger -->
-      <div class="md:hidden">
-        <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
-          <i class="fas fa-bars text-xl"></i>
-        </button>
-      </div>
-    </div>
-    <!-- Mobile Dropdown Menu -->
-    <div id="mobile-menu" class="md:hidden hidden mt-2">
-      <div class="flex flex-col space-y-2 bg-white py-4 px-4 rounded-lg shadow">
-        <a href="{{ url_for('bot.home') }}"
-          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-        <a href="{{ url_for('ticket.get_tickets') }}"
-          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tickets</a>
-        <a href="{{ url_for('auth.profile') }}"
-          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
-        <a href="{{ url_for('auth.logout') }}"
-          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
-      </div>
-    </div>
-  </div>
-</nav>
+    </nav>
 
-<script>
-  // Mobile menu toggle
-  const mobileMenuBtn = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-  mobileMenuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-  });
-</script>
-
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      mobileMenuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+    </script>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="grid lg:grid-cols-4 gap-8">
-            <!-- Chat Interface -->
-            <form class="lg:col-span-3" method="POST" action="{{ url_for('bot.message') }}"
-                enctype="multipart/form-data">
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden ">
-                    <!-- Chat Header -->
-                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <div
-                                    class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center floating-animation">
-                                    <i class="fas fa-robot text-white"></i>
-                                </div>
-                                <div>
-                                    <h2 class="text-white font-semibold">
-                                        AI Support Assistant
-                                    </h2>
-                                    <p class="text-white text-sm opacity-90">
-                                        Online • Ready to help
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2"></div>
-                        </div>
-                    </div>
-
-                    <!-- Chat Messages -->
-                    <div class="chat-container overflow-y-auto p-6 space-y-4 max-h-[420px]">
-                        <!-- AI Welcome Message -->
-                        <div class="flex items-start space-x-3 message-animation">
-                            <div
-                                class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-robot text-indigo-600 text-sm"></i>
-                            </div>
-                            <div class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md">
-                                <p class="text-gray-800">
-                                    Hello! I'm your AI support assistant. I'm here to help you
-                                    resolve any issues with your recent orders. How can I assist
-                                    you today?
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- User Message -->
-                        {% if user_complain != "" %}
-                        <div class="flex items-start space-x-3 justify-end message-animation">
-                            <div class="bg-indigo-600 rounded-2xl rounded-tr-sm px-4 py-3 max-w-md">
-                                <input name="main_desc" value="{{ user_complain }}" hidden />
-                                <p class="text-white">{{ user_complain }}</p>
-                            </div>
-                            <div
-                                class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-user text-white text-sm"></i>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- AI Response -->
-                        {% if bot_response != "" %}
-                        <div class="flex items-start space-x-3 message-animation">
-                            <div
-                                class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-robot text-indigo-600 text-sm"></i>
-                            </div>
-                            <div class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md">
-                                <input name="bot_response" value="{{ bot_response | safe }}" hidden />
-                                <p class="text-gray-800">{{bot_response | safe}}</p>
-                            </div>
-                        </div>
-
-                        <!-- Is this response satisfactory? -->
-                        <div class="flex justify-center space-x-4 mt-4" id="satisfactory">
-                            <p class="text-gray-800 text-lg flex items-center mr-2">
-                                Is this response satisfactory?
-                            </p>
-                            <!-- Yes Button -->
-                            <a href="{{ url_for('bot.home') }}">
-                                <button type="button" name="response"
-                                    class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2 rounded-full shadow font-semibold transition-all hover:from-indigo-600 hover:to-purple-700 focus:outline-none">
-                                    Yes
-                                </button>
-                            </a>
-                            <!-- No Button -->
-                            <button type="button" name="response"
-                                onclick="document.getElementById('satisfactory').classList.add('hidden');document.getElementById('upload-docs').classList.remove('hidden')"
-                                class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-2 rounded-full shadow font-semibold transition-all hover:from-red-600 hover:to-pink-600 focus:outline-none">
-                                No
-                            </button>
-                        </div>
-
-
-                        <!-- File Upload Section -->
-                        <div id="upload-docs"
-                            class="bg-gradient-to-br from-blue-50 to-white hidden border border-blue-200 rounded-2xl shadow p-6 mt-6">
-                            <p class="text-blue-900 font-semibold text-lg mb-4 flex items-center">
-                                <i class="fas fa-paperclip mr-2 text-blue-400"></i>
-                                Upload Supporting Documents
-                            </p>
-                            <div class="flex flex-col items-center space-y-4">
-                                <div class="w-full flex flex-col items-center">
-                                    <label for="image"
-                                        class="cursor-pointer bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold px-6 py-2 rounded-full shadow hover:from-indigo-600 hover:to-purple-700 transition-all flex items-center space-x-2">
-                                        <i class="fas fa-cloud-upload-alt text-white text-lg"></i>
-                                        <span>Choose Image</span>
-                                    </label>
-                                    <input type="file" id="image" name="image" accept="image/*" class="hidden"
-                                        onchange="document.getElementById('selected-file').innerText = this.files.length ? this.files[0].name : 'No file chosen';" />
-                                    <span id="selected-file" class="text-sm text-gray-600 mt-2">No file chosen</span>
-                                </div>
-                                <p class="text-blue-700 mb-0">Please upload clear images (JPG, PNG).</p>
-                            </div>
-                        </div>
-
-                        {% endif %}
-                    </div>
-
-                    <!-- Chat Input -->
-                    <div class="border-t border-gray-200 p-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-1 relative">
-                                <input type="text" autofocus required placeholder="Type your message..." id="com"
-                                    name="com"
-                                    class="w-full border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
-                            </div>
-                            <button type="submit"
-                                class="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
+      <div class="grid lg:grid-cols-4 gap-8">
+        <!-- Chat Interface -->
+        <form
+          class="lg:col-span-3"
+          method="POST"
+          action="{{ url_for('bot.message') }}"
+          enctype="multipart/form-data"
+        >
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Chat Header -->
+            <div
+              class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4"
+            >
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center floating-animation"
+                  >
+                    <i class="fas fa-robot text-white"></i>
+                  </div>
+                  <div>
+                    <h2 class="text-white font-semibold">
+                      AI Support Assistant
+                    </h2>
+                    <p class="text-white text-sm opacity-90">
+                      Online • Ready to help
+                    </p>
+                  </div>
                 </div>
-            </form>
-
-            <!-- Sidebar -->
-            <div class="lg:col-span-1 space-y-6">
-                <!-- Recent Tickets -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                        Recent Tickets
-                    </h3>
-
-                    {% if not tickets %}
-                    <div class="flex justify-center items-center bg-gray-100 p-6 rounded-lg shadow-md">
-                        <p class="text-gray-700 text-lg">No tickets</p>
-                    </div>
-
-                    {% endif %}
-                    <div class="space-y-3">
-                        {% for t in tickets %}
-                        <div
-                            class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors cursor-pointer">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-medium text-gray-900">{{t.ticket_id}}</span>
-                                <span
-                                    class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">{{t.status}}</span>
-                            </div>
-                            <p class="text-sm text-gray-600">{{t.main_description}}</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <a href="{{ url_for('ticket.get_tickets') }}"
-                        class="block mt-4 text-center text-indigo-600 hover:text-indigo-700 text-sm font-medium">
-                        View All Tickets
-                    </a>
-                </div>
-
-                <!-- Support Hours -->
-                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
-                    <h3 class="text-lg font-semibold mb-3">Support Hours</h3>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between">
-                            <span>AI Assistant:</span>
-                            <span>24/7</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Human Agents:</span>
-                            <span>9 AM - 6 PM</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-4 border-t border-white border-opacity-20">
-                        <div class="flex items-center">
-                            <div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                            <span class="text-sm">Currently Online</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="flex items-center space-x-2"></div>
+              </div>
             </div>
-        </div>
-    </div>
-</body>
 
+            <!-- Chat Messages -->
+            <div
+              class="chat-container overflow-y-auto p-6 space-y-4 max-h-[420px]"
+            >
+              <!-- AI Welcome Message -->
+              <div class="flex items-start space-x-3 message-animation">
+                <div
+                  class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0"
+                >
+                  <i class="fas fa-robot text-indigo-600 text-sm"></i>
+                </div>
+                <div
+                  class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md"
+                >
+                  <p class="text-gray-800">
+                    Hello! I'm your AI support assistant. I'm here to help you
+                    resolve any issues with your recent orders. How can I assist
+                    you today?
+                  </p>
+                </div>
+              </div>
+
+              <!-- User Message -->
+              {% if user_complain != "" %}
+              <div
+                class="flex items-start space-x-3 justify-end message-animation"
+              >
+                <div
+                  class="bg-indigo-600 rounded-2xl rounded-tr-sm px-4 py-3 max-w-md"
+                >
+                  <input name="main_desc" value="{{ user_complain }}" hidden />
+                  <p class="text-white">{{ user_complain }}</p>
+                </div>
+                <div
+                  class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0"
+                >
+                  <i class="fas fa-user text-white text-sm"></i>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- AI Response -->
+              {% if bot_response != "" %}
+              <div class="flex items-start space-x-3 message-animation">
+                <div
+                  class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0"
+                >
+                  <i class="fas fa-robot text-indigo-600 text-sm"></i>
+                </div>
+                <div
+                  class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md"
+                >
+                  <input
+                    name="bot_response"
+                    value="{{ bot_response | safe }}"
+                    hidden
+                  />
+                  <p class="text-gray-800">{{bot_response | safe}}</p>
+                </div>
+              </div>
+
+              <!-- Is this response satisfactory? -->
+              <div class="flex justify-center space-x-4 mt-4" id="satisfactory">
+                <p class="text-gray-800 text-lg flex items-center mr-2">
+                  Is this response satisfactory?
+                </p>
+                <!-- Yes Button -->
+                <a href="{{ url_for('bot.home') }}">
+                  <button
+                    type="button"
+                    name="response"
+                    class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2 rounded-full shadow font-semibold transition-all hover:from-indigo-600 hover:to-purple-700 focus:outline-none"
+                  >
+                    Yes
+                  </button>
+                </a>
+                <!-- No Button -->
+                <button
+                  type="button"
+                  name="response"
+                  onclick="document.getElementById('satisfactory').classList.add('hidden');document.getElementById('upload-docs').classList.remove('hidden')"
+                  class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-2 rounded-full shadow font-semibold transition-all hover:from-red-600 hover:to-pink-600 focus:outline-none"
+                >
+                  No
+                </button>
+              </div>
+
+              <!-- File Upload Section -->
+              <div
+                id="upload-docs"
+                class="bg-gradient-to-br from-blue-50 to-white hidden border border-blue-200 rounded-2xl shadow p-6 mt-6"
+              >
+                <p
+                  class="text-blue-900 font-semibold text-lg mb-4 flex items-center"
+                >
+                  <i class="fas fa-paperclip mr-2 text-blue-400"></i>
+                  Upload Supporting Documents
+                </p>
+                <div class="flex flex-col items-center space-y-4">
+                  <div class="w-full flex flex-col items-center">
+                    <label
+                      for="image"
+                      class="cursor-pointer bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold px-6 py-2 rounded-full shadow hover:from-indigo-600 hover:to-purple-700 transition-all flex items-center space-x-2"
+                    >
+                      <i class="fas fa-cloud-upload-alt text-white text-lg"></i>
+                      <span>Choose Image</span>
+                    </label>
+                    <input
+                      type="file"
+                      id="image"
+                      name="image"
+                      accept="image/*"
+                      class="hidden"
+                      onchange="document.getElementById('selected-file').innerText = this.files.length ? this.files[0].name : 'No file chosen';"
+                    />
+                    <span id="selected-file" class="text-sm text-gray-600 mt-2"
+                      >No file chosen</span
+                    >
+                  </div>
+                  <p class="text-blue-700 mb-0">
+                    Please upload clear images (JPG, PNG).
+                  </p>
+                </div>
+              </div>
+
+              {% endif %}
+            </div>
+
+            <!-- Chat Input -->
+            <div class="border-t border-gray-200 p-4">
+              <div class="flex items-center space-x-3">
+                <div class="flex-1 relative">
+                  <input
+                    type="text"
+                    autofocus
+                    required
+                    placeholder="Type your message..."
+                    id="com"
+                    name="com"
+                    class="w-full border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors"
+                >
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Recent Tickets -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              Recent Tickets
+            </h3>
+
+            {% if not tickets %}
+            <div
+              class="flex justify-center items-center bg-gray-100 p-6 rounded-lg shadow-md"
+            >
+              <p class="text-gray-700 text-lg">No tickets</p>
+            </div>
+
+            {% endif %}
+            <div class="space-y-3">
+              {% for t in tickets %}
+              <div
+                class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-gray-900"
+                    >{{t.ticket_id}}</span
+                  >
+                  <span
+                    class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
+                    >{{t.status}}</span
+                  >
+                </div>
+                <p class="text-sm text-gray-600">{{t.main_description}}</p>
+              </div>
+              {% endfor %}
+            </div>
+            <a
+              href="{{ url_for('ticket.get_tickets') }}"
+              class="block mt-4 text-center text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+            >
+              View All Tickets
+            </a>
+          </div>
+
+          <!-- Support Hours -->
+          <div
+            class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white"
+          >
+            <h3 class="text-lg font-semibold mb-3">Support Hours</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span>AI Assistant:</span>
+                <span>24/7</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Human Agents:</span>
+                <span>9 AM - 6 PM</span>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-white border-opacity-20">
+              <div class="flex items-center">
+                <div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                <span class="text-sm">Currently Online</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

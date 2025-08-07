@@ -3,6 +3,7 @@ from flask import request, render_template, redirect, url_for
 from db import users, ticket
 
 UPLOAD_FOLDER = "static"
+NOTIFY_EMAIL = set()
 
 
 @ticket_bp.route("/ticket", methods=["GET"])
@@ -46,9 +47,9 @@ def ticket_details(ticket_id: str):
     if not is_session_token_valid:
         return redirect(url_for("auth.about"))
     t = ticket.get_ticket_by_ticket_id(ticket_id)
-    
+
     email = users.get_email_by_token(session_token)
-    is_admin = False 
+    is_admin = False
     if email == "admin@gmail.com":
         is_admin = True
     print(f"Is Admin: {is_admin}")
@@ -69,4 +70,7 @@ def add_remarks():
     remarks = request.form.get("remark")
     ticket_id = request.form.get("ticket-id")
     ticket.update_remarks(ticket_id, remarks)
+
+    receiver_mail = ticket.get_user_mail_by_ticket_id(ticket_id)
+    NOTIFY_EMAIL.add(receiver_mail)
     return redirect(url_for("ticket.get_tickets"))

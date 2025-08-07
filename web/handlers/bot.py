@@ -1,5 +1,5 @@
 from . import bot_bp
-from handlers.ticket import UPLOAD_FOLDER
+from handlers.ticket import UPLOAD_FOLDER, NOTIFY_EMAIL
 from chatbot import chatbot
 from flask import request, render_template, redirect, url_for
 from db import users, ticket
@@ -21,11 +21,20 @@ def home():
         return redirect(url_for("auth.login"))
 
     email = users.get_email_by_token(session_token)
+    noti = False
+    if email in NOTIFY_EMAIL:
+        NOTIFY_EMAIL.remove(email)
+        noti = True
+
     ticks = ticket.get_ticket_by_email(email)
     ticks = ticks[-3:]
 
     return render_template(
-        "home.html", user_complain="", bot_response="", tickets=ticks
+        "home.html",
+        user_complain="",
+        bot_response="",
+        tickets=ticks,
+        noti=noti,
     )
 
 
@@ -46,6 +55,7 @@ def message():
     if not bot_res:
         faqs = chatbot.get_similar_solution(user_complain)
         if faqs:
+            print("Fetching from FAQs ...")
             return render_template(
                 "home.html",
                 user_complain=user_complain,
