@@ -73,7 +73,7 @@
     </div>
   </nav>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <form class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" action="{{ url_for('ticket.add_remarks') }}", method="POST">
     <!-- Details Card -->
     <div class="ticket-card bg-white rounded-xl shadow-lg p-8 border-l-4 border-indigo-500">
       <!-- Header -->
@@ -81,9 +81,11 @@
         <div>
           <h1 class="text-2xl md:text-3xl font-bold text-indigo-600 mb-2">Ticket Details</h1>
           <div class="flex items-center space-x-4 text-sm text-gray-500">
-            <span class="font-semibold text-gray-800">Ticket #TK-2024-003</span>
-            <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">High Priority</span>
-            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Open</span>
+            <span class="font-semibold text-gray-800">Ticket {{ticket.ticket_id}}</span>
+            <input type="text" name="ticket-id" hidden value="{{ ticket.ticket_id }}">
+            <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">{{ticket.priority}}
+              Priority</span>
+            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">{{ticket.status}}</span>
           </div>
         </div>
         <div class="mt-4 md:mt-0">
@@ -98,11 +100,11 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-8">
         <div>
           <p><span class="font-semibold text-gray-700">Category:</span>
-            Product Quality Issue - Damaged Item Received</p>
+            {{ticket.category}}</p>
         </div>
         <div>
           <p><span class="font-semibold text-gray-700">Reported By:</span>
-            user@example.com</p>
+            {{ticket.user_email}}</p>
         </div>
       </div>
 
@@ -110,17 +112,18 @@
       <div class="mb-8">
         <h2 class="text-lg font-semibold mb-2">📝 Problem Description</h2>
         <p class="text-gray-700 leading-relaxed">
-          The laptop I received yesterday has a cracked screen and torn packaging.
-          I need a replacement or a full refund as soon as possible.
+          {{ticket.main_description}}
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+          {{ticket.other_description}}
         </p>
       </div>
 
       <!-- Attachments -->
       <div class="mb-8">
         <h2 class="text-lg font-semibold mb-2">🖼 Attachment</h2>
-        {% if ticket.image_url %}
-        <img src="{{ url_for('static', filename='uploads/' + ticket.image_url) }}"
-          alt="Attached Evidence"
+        {% if ticket.image_url != "" %}
+        <img src="/{{ ticket.image_url }}" alt="Attached Evidence"
           class="w-full max-w-md border rounded-lg shadow-md" />
         {% else %}
         <p class="text-sm text-gray-500">No image was attached with this complaint.</p>
@@ -132,15 +135,18 @@
         <h2 class="text-lg font-semibold mb-2 mt-8">💬 Remarks</h2>
 
         <!-- Textarea to enter remarks -->
-        <textarea id="remarkInput"
-          class="w-full p-2 border rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400" rows="3"
-          placeholder="Write your remark here..."></textarea>
+        <textarea id="remarkInput" {% if not is_admin %} disabled {% endif %}
+        name="remark"
+          class="w-full p-2 border rounded {% if not is_admin %} cursor-not-allowed {% endif %} resize-none focus:outline-none focus:ring-2 focus:ring-blue-400" rows="3"
+          placeholder="Write your remark here...">{{ ticket.remark }}</textarea>
 
         <!-- Post Button with gradient -->
+        {% if is_admin %}
         <div class="mt-2">
-          <button id="postRemarkBtn"
+          <button id="postRemarkBtn" type="submit"
             class="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white px-4 py-1 rounded shadow-md font-medium transition-all hover:from-[#5a67d8] hover:to-[#6b21a8] focus:outline-none">Post</button>
         </div>
+        {% endif %}
 
         <!-- Display saved remark here -->
         <div id="savedRemark" class="mt-4 text-gray-800 hidden"></div>
@@ -162,7 +168,7 @@
         };
       </script>
     </div>
-  </div>
+  </form>
 </body>
 
 </html>

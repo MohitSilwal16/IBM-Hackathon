@@ -46,7 +46,13 @@ def ticket_details(ticket_id: str):
     if not is_session_token_valid:
         return redirect(url_for("auth.about"))
     t = ticket.get_ticket_by_ticket_id(ticket_id)
-    return render_template("ticket_details.html", ticket=t)
+    
+    email = users.get_email_by_token(session_token)
+    is_admin = False 
+    if email == "admin@gmail.com":
+        is_admin = True
+    print(f"Is Admin: {is_admin}")
+    return render_template("ticket_details.html", ticket=t, is_admin=is_admin)
 
 
 @ticket_bp.route("/remarks", methods=["POST"])
@@ -58,9 +64,9 @@ def add_remarks():
 
     email = users.get_email_by_token(session_token)
     if email != "admin@gmail.com":
-        return redirect(url_for("ticket.remarks"))
+        return redirect(url_for("ticket.add_remarks"))
 
-    remarks = request.form.get("remarks")
+    remarks = request.form.get("remark")
     ticket_id = request.form.get("ticket-id")
     ticket.update_remarks(ticket_id, remarks)
     return redirect(url_for("ticket.get_tickets"))
