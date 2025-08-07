@@ -21,10 +21,12 @@ def home():
         return redirect(url_for("auth.login"))
 
     email = users.get_email_by_token(session_token)
-    t = ticket.get_ticket_by_email(email)
-    t = t[:3]
+    ticks = ticket.get_ticket_by_email(email)
+    ticks = ticks[-3:]
 
-    return render_template("home.html", user_complain="", bot_response="", tickets=t)
+    return render_template(
+        "home.html", user_complain="", bot_response="", tickets=ticks
+    )
 
 
 @bot_bp.route("/message", methods=["POST"])
@@ -42,6 +44,15 @@ def message():
     bot_res = request.form.get("bot_response")
     print(f"Bot Response: {bot_res}")
     if not bot_res:
+        faqs = chatbot.get_similar_solution(user_complain)
+        if faqs:
+            return render_template(
+                "home.html",
+                user_complain=user_complain,
+                bot_response=faqs,
+                tickets=ticks,
+            )
+
         bot_res = chatbot.get_complain_solution(user_complain)
         print(f"User Complain: {user_complain}")
         return render_template(
