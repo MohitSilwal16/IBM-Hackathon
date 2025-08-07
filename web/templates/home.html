@@ -77,60 +77,58 @@
 
 <body class="bg-gray-50 min-h-screen">
     <!-- Navigation -->
-    <!-- Navigation -->
-<nav class="bg-white shadow-lg sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
-      <div class="flex items-center">
-        <div class="flex-shrink-0">
-          <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="text-2xl font-bold gradient-text">SwiftResolve</div>
+                    </div>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="{{ url_for('bot.home') }}"
+                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                        <a href="{{ url_for('ticket.get_tickets') }}"
+                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tickets</a>
+                        <a href="{{ url_for('auth.profile') }}"
+                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
+                        <a href="{{ url_for('auth.logout') }}"
+                            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
+                    </div>
+                </div>
+                <!-- Mobile Hamburger -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile Dropdown Menu -->
+            <div id="mobile-menu" class="md:hidden hidden mt-2">
+                <div class="flex flex-col space-y-2 bg-white py-4 px-4 rounded-lg shadow">
+                    <a href="{{ url_for('bot.home') }}"
+                        class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                    <a href="{{ url_for('ticket.get_tickets') }}"
+                        class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tickets</a>
+                    <a href="{{ url_for('auth.profile') }}"
+                        class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
+                    <a href="{{ url_for('auth.logout') }}"
+                        class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- Desktop Menu -->
-      <div class="hidden md:block">
-        <div class="ml-10 flex items-baseline space-x-4">
-          <a href="{{ url_for('bot.home') }}"
-            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-          <a href="{{ url_for('ticket.get_tickets') }}"
-            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tickets</a>
-          <a href="{{ url_for('auth.profile') }}"
-            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
-          <a href="{{ url_for('auth.logout') }}"
-            class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
-        </div>
-      </div>
-      <!-- Mobile Hamburger -->
-      <div class="md:hidden">
-        <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 focus:outline-none">
-          <i class="fas fa-bars text-xl"></i>
-        </button>
-      </div>
-    </div>
-    <!-- Mobile Dropdown Menu -->
-    <div id="mobile-menu" class="md:hidden hidden mt-2">
-      <div class="flex flex-col space-y-2 bg-white py-4 px-4 rounded-lg shadow">
-        <a href="{{ url_for('bot.home') }}"
-          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-        <a href="{{ url_for('ticket.get_tickets') }}"
-          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tickets</a>
-        <a href="{{ url_for('auth.profile') }}"
-          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
-        <a href="{{ url_for('auth.logout') }}"
-          class="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</a>
-      </div>
-    </div>
-  </div>
-</nav>
+    </nav>
 
-<script>
-  // Mobile menu toggle
-  const mobileMenuBtn = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-  mobileMenuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-  });
-</script>
-
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid lg:grid-cols-4 gap-8">
@@ -190,6 +188,36 @@
                         </div>
                         {% endif %}
 
+                        <!-- Loading Spinner (hidden by default, shown while loading) -->
+                        <div id="ai-loading" class="flex items-center space-x-3 message-animation hidden">
+                            <div
+                                class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="animate-spin h-6 w-6" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="#667eea" stroke-width="4"
+                                        fill="none" />
+                                    <path class="opacity-75" fill="url(#gradient)"
+                                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                                            <stop offset="0%" stop-color="#667eea" />
+                                            <stop offset="100%" stop-color="#764ba2" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-md">
+                                <p class="text-gray-800 flex items-center">
+                                    <span class="mr-2">AI is thinking...</span>
+                                    <svg class="animate-spin h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="#667eea"
+                                            stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="#764ba2" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+                                        </path>
+                                    </svg>
+                                </p>
+                            </div>
+                        </div>
+
                         <!-- AI Response -->
                         {% if bot_response != "" %}
                         <div class="flex items-start space-x-3 message-animation">
@@ -211,18 +239,18 @@
                             <!-- Yes Button -->
                             <a href="{{ url_for('bot.home') }}">
                                 <button type="button" name="response"
-                                    class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2 rounded-full shadow font-semibold transition-all hover:from-indigo-600 hover:to-purple-700 focus:outline-none">
+                                    class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-3 py-1.5 text-sm rounded-full shadow font-semibold transition-all hover:from-indigo-600 hover:to-purple-700 focus:outline-none">
                                     Yes
                                 </button>
                             </a>
                             <!-- No Button -->
                             <button type="button" name="response"
                                 onclick="document.getElementById('satisfactory').classList.add('hidden');document.getElementById('upload-docs').classList.remove('hidden')"
-                                class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-2 rounded-full shadow font-semibold transition-all hover:from-red-600 hover:to-pink-600 focus:outline-none">
+                                class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1.5 text-sm rounded-full shadow font-semibold transition-all hover:from-red-600 hover:to-pink-600 focus:outline-none">
                                 No
                             </button>
-                        </div>
 
+                        </div>
 
                         <!-- File Upload Section -->
                         <div id="upload-docs"
@@ -322,6 +350,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Loader Spinner Show/Hide Logic -->
+    <script>
+        // Show the loader when the form is submitted
+        const chatForm = document.querySelector('form');
+        const loader = document.getElementById('ai-loading');
+
+        if (chatForm && loader) {
+            chatForm.addEventListener('submit', function () {
+                loader.classList.remove('hidden');
+                setTimeout(() => loader.scrollIntoView({ behavior: 'smooth', block: 'end' }), 30);
+            });
+        }
+    </script>
 </body>
 
 </html>
