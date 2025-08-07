@@ -42,23 +42,24 @@ def get_resolved_tickets() -> list[Ticket]:
 
 def get_all_tickets_sorted_by_priority() -> list[Ticket]:
     priority_order = case(
-        (Ticket.status == "Resolved", -1),
+        (Ticket.status == "Resolved", 0),
         (Ticket.priority == "Urgent", 4),
         (Ticket.priority == "High", 3),
         (Ticket.priority == "Medium", 2),
         (Ticket.priority == "Low", 1),
-        else_=0,
+        else_=5,
     )
     return Ticket.query.order_by(priority_order).all()
 
 
 def get_all_tickets_by_email_sorted_by_priority(email: str) -> list[Ticket]:
     priority_order = case(
+        (Ticket.status == "Resolved", 0),
         (Ticket.priority == "Urgent", 4),
         (Ticket.priority == "High", 3),
         (Ticket.priority == "Medium", 2),
         (Ticket.priority == "Low", 1),
-        else_=0,
+        else_=5,
     )
     return (
         Ticket.query.filter(Ticket.user_email == email).order_by(priority_order).all()
